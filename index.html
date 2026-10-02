@@ -1,1 +1,126 @@
 <h1>Mi segunda página web</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Mundo 3D</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #0b0e14;
+      color: #ffffff;
+      font-family: sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    p {
+      color: #a0aec0;
+    }
+    /* Contenedor del Planeta 3D */
+    #contenedor-mundo {
+      width: 100%;
+      height: 450px;
+      cursor: grab;
+    }
+    #contenedor-mundo:active {
+      cursor: grabbing;
+    }
+  </style>
+
+  <!-- Librería Three.js desde CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <h1>Explora mi Mundo 3D</h1>
+  <p>Haz clic y arrastra con el ratón o el dedo para girar la Tierra</p>
+
+  <!-- Aquí se dibujará el mundo -->
+  <div id="contenedor-mundo"></div>
+
+  <script>
+    // 1. Crear Escena, Cámara y Renderizador
+    const contenedor = document.getElementById('contenedor-mundo');
+    const escena = new THREE.Scene();
+    const camara = new THREE.PerspectiveCamera(45, contenedor.clientWidth / contenedor.clientHeight, 0.1, 1000);
+    camara.position.z = 3;
+
+    const renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderizador.setSize(contenedor.clientWidth, contenedor.clientHeight);
+    contenedor.appendChild(renderizador.domElement);
+
+    // 2. Crear la Esfera (Planeta)
+    const geometria = new THREE.SphereGeometry(1, 64, 64);
+    
+    // Cargar textura real de la Tierra
+    const cargadorTextura = new THREE.TextureLoader();
+    const texturaTierra = cargadorTextura.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
+    const texturaEspecular = cargadorTextura.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_specular_2048.jpg');
+
+    const material = new THREE.MeshPhongMaterial({
+      map: texturaTierra,
+      specularMap: texturaEspecular,
+      specular: new THREE.Color(0x333333),
+      shininess: 15
+    });
+
+    const tierra = new THREE.Mesh(geometria, material);
+    escena.add(tierra);
+
+    // 3. Luces
+    const luzLuzSolar = new THREE.DirectionalLight(0xffffff, 1.2);
+    luzLuzSolar.position.set(5, 3, 5);
+    escena.add(luzLuzSolar);
+
+    const luzAmbiental = new THREE.AmbientLight(0x333333);
+    escena.add(luzAmbiental);
+
+    // 4. Control de Rotación con Ratón / Táctil
+    let arrojando = false;
+    let previoX = 0;
+    let previoY = 0;
+
+    contenedor.addEventListener('pointerdown', (e) => {
+      arrojando = true;
+      previoX = e.clientX;
+      previoY = e.clientY;
+    });
+
+    window.addEventListener('pointerup', () => arrojando = false);
+
+    window.addEventListener('pointermove', (e) => {
+      if (!arrojando) return;
+      const deltaX = e.clientX - previoX;
+      const deltaY = e.clientY - previoY;
+
+      tierra.rotation.y += deltaX * 0.005;
+      tierra.rotation.x += deltaY * 0.005;
+
+      previoX = e.clientX;
+      previoY = e.clientY;
+    });
+
+    // 5. Animación continua
+    function animar() {
+      requestAnimationFrame(animar);
+      if (!arrojando) {
+        tierra.rotation.y += 0.002; // Rotación automática suave
+      }
+      renderizador.render(escena, camara);
+    }
+    animar();
+
+    // Reajustar tamaño si cambia la pantalla
+    window.addEventListener('resize', () => {
+      camara.aspect = contenedor.clientWidth / contenedor.clientHeight;
+      camara.updateProjectionMatrix();
+      renderizador.setSize(contenedor.clientWidth, contenedor.clientHeight);
+    });
+  </script>
+
+</body>
+</html>
