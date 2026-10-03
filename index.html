@@ -7,16 +7,15 @@
   <style>
     body {
       margin: 0;
-      background-color: #87ceeb; /* Fondo Cielo Azul Claro */
-      color: #2d3748;
-      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif, Arial;
+      background-color: #87ceeb; /* Cielo Azul Claro */
+      color: #1a365d;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
       overflow-x: hidden;
     }
 
     h1 {
       margin-top: 15px;
-      color: #1a365d;
       text-shadow: 2px 2px 0px #ffffff;
     }
 
@@ -30,18 +29,19 @@
       width: 100%;
       height: 380px;
       cursor: grab;
+      margin: 0 auto;
     }
     #contenedor-mundo:active {
       cursor: grabbing;
     }
 
-    /* Barra de Botones de Navegación */
+    /* Botones */
     .menu-paises {
       display: flex;
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin: 10px auto;
+      margin: 15px auto;
       padding: 0 10px;
     }
 
@@ -51,7 +51,7 @@
       border: 3px solid #3182ce;
       padding: 10px 18px;
       border-radius: 25px;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -66,14 +66,14 @@
 
     /* Tarjetas de Contenido */
     .tarjeta-contenido {
-      max-width: 600px;
+      max-width: 550px;
       margin: 15px auto 30px auto;
       background: #ffffff;
       border-radius: 20px;
-      padding: 20px;
+      padding: 25px;
       border: 3px solid #63b3ed;
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-      display: none; /* Ocultas por defecto */
+      display: none;
       animation: aparecer 0.4s ease;
     }
 
@@ -87,123 +87,135 @@
     }
   </style>
 
-  <!-- Tres.js para el 3D -->
-  <script src="[https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js](https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js)"></script>
+  <!-- Carga de Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
   <h1>🌏 Mi Mundo de Historias</h1>
-  <p class="subtitulo">Toca un botón o un país para girar el mundo</p>
+  <p class="subtitulo">Toca un botón o gira el planeta con el ratón/dedo</p>
 
-  <!-- Botones de los Países -->
+  <!-- Botones de Navegación -->
   <div class="menu-paises">
-    <button class="boton-pais activo" onclick="irAPais('mexico')">🇲🇽 México (Mi Historia)</button>
-    <button class="boton-pais" onclick="irAPais('japon')">🇯🇵 Japón (Fotos)</button>
-    <button class="boton-pais" onclick="irAPais('francia')">🇫🇷 Francia (Mi Vida)</button>
+    <button class="boton-pais activo" onclick="irAPais(event, 'mexico')">🇲🇽 México (Mi Historia)</button>
+    <button class="boton-pais" onclick="irAPais(event, 'japon')">🇯🇵 Japón (Fotos)</button>
+    <button class="boton-pais" onclick="irAPais(event, 'francia')">🇫🇷 Francia (Mi Vida)</button>
   </div>
 
-  <!-- Planeta 3D estilo dibujo -->
+  <!-- Planeta 3D -->
   <div id="contenedor-mundo"></div>
 
-  <!-- Contenido 1: México -->
+  <!-- Contenidos -->
   <div id="contenido-mexico" class="tarjeta-contenido activa">
     <h2>📖 Mi Historia (México)</h2>
     <p>Aquí comienza mi viaje. Escribe aquí el relato o historia de tus inicios.</p>
   </div>
 
-  <!-- Contenido 2: Japón -->
   <div id="contenido-japon" class="tarjeta-contenido">
     <h2>🖼️ Galería de Fotos (Japón)</h2>
     <p>Álbum de imágenes especiales de tu trayecto o aventuras.</p>
   </div>
 
-  <!-- Contenido 3: Francia -->
   <div id="contenido-francia" class="tarjeta-contenido">
     <h2>⭐ Mi Vida (Francia)</h2>
     <p>Un vistazo a tu día a día, pasatiempos, metas y proyectos actuales.</p>
   </div>
 
   <script>
-    // 1. Escena 3D con estilo de dibujo
     const contenedor = document.getElementById('contenedor-mundo');
+
+    // 1. Crear Escena
     const escena = new THREE.Scene();
 
     const camara = new THREE.PerspectiveCamera(45, contenedor.clientWidth / contenedor.clientHeight, 0.1, 1000);
-    camara.position.z = 2.8;
+    camara.position.z = 3;
 
     const renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderizador.setSize(contenedor.clientWidth, contenedor.clientHeight);
     contenedor.appendChild(renderizador.domElement);
 
-    // 2. Creación del Planeta Estilo Dibujo
-    const geometria = new THREE.SphereGeometry(1, 40, 40);
-    const cargador = new THREE.TextureLoader();
-
-    // Textura con estilo ilustrado/caricatura
-    const texturaPlaneta = cargador.load('[https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg](https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg)');
-
-    const materialMundo = new THREE.MeshToonMaterial({
-      map: texturaPlaneta,
-      color: 0x88ccff
+    // 2. Crear Planeta con Material estilo Dibujo (Azul Océano)
+    const geometria = new THREE.SphereGeometry(1, 64, 64);
+    const materialMar = new THREE.MeshToonMaterial({
+      color: 0x4aa3df, // Azul dibujo
+      wireframe: false
     });
 
-    const mundo = new THREE.Mesh(geometria, materialMundo);
+    const mundo = new THREE.Mesh(geometria, materialMar);
     escena.add(mundo);
 
-    // Luces Toon (Flat/Estilo Dibujo)
-    const luz1 = new THREE.DirectionalLight(0xffffff, 1.2);
-    luz1.position.set(5, 5, 5);
-    escena.add(luz1);
+    // Agregar una malla secundaria (malla de cuadrícula verde para simular continentes/líneas de dibujo)
+    const geometriaLineas = new THREE.SphereGeometry(1.002, 24, 24);
+    const materialLineas = new THREE.MeshBasicMaterial({
+      color: 0x27ae60,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.4
+    });
+    const continentes = new THREE.Mesh(geometriaLineas, materialLineas);
+    mundo.add(continentes);
 
-    const luz2 = new THREE.AmbientLight(0x777777);
-    escena.add(luz2);
+    // 3. Puntos/Marcadores de Países (Pines sobre el mundo)
+    function crearPin(colorHex, x, y, z) {
+      const geoPin = new THREE.SphereGeometry(0.06, 16, 16);
+      const matPin = new THREE.MeshBasicMaterial({ color: colorHex });
+      const pin = new THREE.Mesh(geoPin, matPin);
+      pin.position.set(x, y, z);
+      mundo.add(pin);
+    }
 
-    // Coordenadas de rotación objetivo para cada país
-    const coordenadasPaises = {
-      mexico: { rotY: 1.8, rotX: 0.3 },
-      japon: { rotY: -1.5, rotX: 0.5 },
-      francia: { rotY: 0.1, rotX: 0.8 }
+    crearPin(0xe74c3c, -0.6, 0.4, 0.7); // México (Rojo)
+    crearPin(0xf1c40f, 0.8, 0.5, -0.3); // Japón (Amarillo)
+    crearPin(0x9b59b6, 0.1, 0.7, 0.7);  // Francia (Morado)
+
+    // 4. Luces estilo Caricatura
+    const luzDireccional = new THREE.DirectionalLight(0xffffff, 1.3);
+    luzDireccional.position.set(5, 5, 5);
+    escena.add(luzDireccional);
+
+    const luzAmbiente = new THREE.AmbientLight(0xffffff, 0.6);
+    escena.add(luzAmbiente);
+
+    // Coordenadas
+    const coordenadas = {
+      mexico: { rotY: 0.8, rotX: -0.3 },
+      japon: { rotY: -2.2, rotX: -0.4 },
+      francia: { rotY: -0.1, rotX: -0.6 }
     };
 
-    let objetivoRotY = coordenadasPaises.mexico.rotY;
-    let objetivoRotX = coordenadasPaises.mexico.rotX;
+    let objetivoY = coordenadas.mexico.rotY;
+    let objetivoX = coordenadas.mexico.rotX;
 
-    // 3. Función para cambiar de país
-    function irAPais(nombrePais) {
-      // Ajustar posición de rotación
-      objetivoRotY = coordenadasPaises[nombrePais].rotY;
-      objetivoRotX = coordenadasPaises[nombrePais].rotX;
+    function irAPais(evento, nombrePais) {
+      objetivoY = coordenadas[nombrePais].rotY;
+      objetivoX = coordenadas[nombrePais].rotX;
 
-      // Cambiar clase activa en tarjetas de texto
       document.querySelectorAll('.tarjeta-contenido').forEach(el => el.classList.remove('activa'));
       document.getElementById('contenido-' + nombrePais).classList.add('activa');
 
-      // Cambiar clase activa en botones
       document.querySelectorAll('.boton-pais').forEach(el => el.classList.remove('activo'));
-      event.currentTarget?.classList.add('activo');
+      if (evento) evento.currentTarget.classList.add('activo');
     }
 
-    // Interacción por arrastre manual
-    let arrastrando = false, prevX = 0, prevY = 0;
-    contenedor.addEventListener('pointerdown', (e) => { arrastrando = true; prevX = e.clientX; prevY = e.clientY; });
+    // Arrastre manual
+    let arrastrando = false, px = 0, py = 0;
+    contenedor.addEventListener('pointerdown', (e) => { arrastrando = true; px = e.clientX; py = e.clientY; });
     window.addEventListener('pointerup', () => arrastrando = false);
     window.addEventListener('pointermove', (e) => {
       if (!arrastrando) return;
-      mundo.rotation.y += (e.clientX - prevX) * 0.005;
-      mundo.rotation.x += (e.clientY - prevY) * 0.005;
-      objetivoRotY = mundo.rotation.y;
-      objetivoRotX = mundo.rotation.x;
-      prevX = e.clientX;
-      prevY = e.clientY;
+      mundo.rotation.y += (e.clientX - px) * 0.005;
+      mundo.rotation.x += (e.clientY - py) * 0.005;
+      objetivoY = mundo.rotation.y;
+      objetivoX = mundo.rotation.x;
+      px = e.clientX; py = e.clientY;
     });
 
-    // Bucle de Animación Suave
+    // Bucle de renderizado
     function animar() {
       requestAnimationFrame(animar);
       if (!arrastrando) {
-        // Transición suave hacia el país seleccionado
-        mundo.rotation.y += (objetivoRotY - mundo.rotation.y) * 0.05;
-        mundo.rotation.x += (objetivoRotX - mundo.rotation.x) * 0.05;
+        mundo.rotation.y += (objetivoY - mundo.rotation.y) * 0.05;
+        mundo.rotation.x += (objetivoX - mundo.rotation.x) * 0.05;
       }
       renderizador.render(escena, camara);
     }
