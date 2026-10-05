@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portafolio</title>
+  
+  <!-- Fuente Serif elegante desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* VARIABLES DE COLOR Y FUENTES */
+    :root {
+      --bg-color: #f3f0ec;       /* Fondo crema/beige claro */
+      --text-color: #e34026;     /* Rojo/terracota de la plantilla */
+      --body-text: #555555;     /* Gris oscuro para el párrafo */
+      --font-title: 'Playfair Display', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      font-family: var(--font-body);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 3rem;
+    }
+
+    /* ENCABEZADO Y NAVEGACIÓN */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+    }
+
+    .brand-name {
+      font-weight: 600;
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      margin-left: 2rem;
+      transition: opacity 0.3s;
+    }
+
+    nav a:hover {
+      opacity: 0.7;
+    }
+
+    /* SECCIÓN PRINCIPAL (HERO) */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 2rem;
+      flex: 1;
+      position: relative;
+    }
+
+    .hero-text {
+      z-index: 2;
+    }
+
+    /* TÍTULO GRANDE (PORTAFOLIO) */
+    .title-large {
+      font-family: var(--font-title);
+      font-size: clamp(4.5rem, 11vw, 10rem);
+      line-height: 0.85;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-left: -0.05em; /* Ajuste para alinear borde con el margen */
+    }
+
+    /* DESCRIPCIÓN Y BIO */
+    .bio-text {
+      margin-top: 3.5rem;
+      max-width: 380px;
+      color: var(--body-text);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* CONTENEDOR DE LA FOTO */
+    .hero-image-container {
+      position: relative;
+      width: 100%;
+      height: 75vh;
+      max-height: 650px;
+    }
+
+    .hero-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      /* Ajusta el tono ligeramente cálido si lo deseas */
+      filter: contrast(1.02) brightness(0.98);
+    }
+
+    /* DISEÑO RESPONSIVO PARA MÓVILES */
+    @media (max-width: 900px) {
+      body {
+        padding: 1.5rem;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .hero-image-container {
+        height: 50vh;
+        order: 2;
+      }
+
+      .hero-text {
+        order: 1;
+      }
+
+      .bio-text {
+        margin-top: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <!-- CAMBIA TU NOMBRE O MARCA AQUÍ -->
+    <div class="brand-name">PIA QUINN</div>
+
+    <!-- ENLACES DEL MENÚ -->
+    <nav>
+      <a href="#informacion">Información</a>
+      <a href="#trabajos">Trabajos destacados</a>
+    </nav>
+  </header>
+
+  <!-- SECCIÓN PRINCIPAL -->
+  <main class="hero">
+    
+    <!-- COLUMNA IZQUIERDA: TEXTO -->
+    <div class="hero-text">
+      <h1 class="title-large">
+        PORTAFOLIO
+      </h1>
+      
+     
+      <p class="bio-text">
+        Soy Pedro, trabajo desde 2013 en Mastertrim de Mexico y vivo en torreon. Antes de adentrarme en el mundo de la costura, me dedicaba al vagabundeo y la reflexion. Ahora voy camino de convertirme en programador web.
+      </p>
+    </div>
+
+    <!-- COLUMNA DERECHA: FOTO -->
+    <div class="hero-image-container">
+      <!-- REMPLAZA 'tu-foto.jpg' POR LA RUTA O LINK DE TU IMAGEN -->
+      <img src="https://fam10.jpg" alt="Retrato del creador">
+    </div>
+
+  </main>
+
+</body>
+</html>
