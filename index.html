@@ -3,104 +3,220 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portafolio</title>
-  
-  <!-- Fuente Serif elegante desde Google Fonts -->
+  <title>Pyter · Curriculum Vitae</title>
+  <meta name="description" content="Curriculum vitae de Pyter: sobre mí, información y trabajos.">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* VARIABLES DE COLOR Y FUENTES */
+    /* ========== VARIABLES ========== */
     :root {
-      --bg-color: #f3f0ec;       /* Fondo crema/beige claro */
-      --text-color: #e34026;     /* Rojo/terracota de la plantilla */
-      --body-text: #555555;     /* Gris oscuro para el párrafo */
-      --font-title: 'Playfair Display', serif;
-      --font-body: 'Inter', sans-serif;
+      --bg-color: #f3f0ec;
+      --accent: #e34026;        /* rojo terracota (títulos grandes) */
+      --accent-dark: #b8321c;   /* versión más oscura para texto pequeño */
+      --body-text: #4a4541;
+      --line: rgba(227, 64, 38, 0.35);
+      --font-title: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       background-color: var(--bg-color);
       font-family: var(--font-body);
-      color: var(--text-color);
+      color: var(--accent);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       padding: 2rem 3rem;
+      overflow-x: hidden;
     }
 
-    /* ENCABEZADO Y NAVEGACIÓN */
+    /* ========== HOJAS DE OTOÑO (FONDO) ========== */
+    #hojas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .hoja {
+      position: absolute;
+      top: -60px;
+      left: var(--x);
+      width: var(--size);
+      height: var(--size);
+      opacity: 0.8;
+      animation: caer var(--dur) linear var(--delay) infinite;
+      will-change: transform;
+    }
+
+    .hoja svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      animation: mecer var(--sway) ease-in-out var(--delay) infinite alternate;
+    }
+
+    @keyframes caer {
+      from { transform: translateY(-60px); }
+      to   { transform: translateY(calc(100vh + 80px)); }
+    }
+
+    @keyframes mecer {
+      from { transform: translateX(-35px) rotate(-70deg); }
+      to   { transform: translateX(35px)  rotate(110deg); }
+    }
+
+    /* Sin animación para quien prefiere menos movimiento */
+    @media (prefers-reduced-motion: reduce) {
+      .hoja, .hoja svg { animation: none; }
+      .hoja { top: var(--y-fija); }
+    }
+
+    /* ========== CONTENIDO (por encima de las hojas) ========== */
+    header, main { position: relative; z-index: 1; }
+
+    /* ========== ENCABEZADO ========== */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
-      text-transform: uppercase;
       font-size: 0.9rem;
       letter-spacing: 0.05em;
       font-weight: 500;
     }
 
     .brand-name {
-      font-weight: 600;
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
     }
 
     nav a {
-      color: var(--text-color);
+      color: var(--accent-dark);
       text-decoration: none;
       margin-left: 2rem;
-      transition: opacity 0.3s;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s;
     }
 
-    nav a:hover {
-      opacity: 0.7;
+    nav a:hover { border-bottom-color: currentColor; }
+
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--accent-dark);
+      outline-offset: 4px;
     }
 
-    /* SECCIÓN PRINCIPAL (HERO) */
+    /* ========== PORTADA ========== */
     .hero {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
       align-items: center;
-      gap: 2rem;
+      gap: 3rem;
       flex: 1;
-      position: relative;
     }
 
-    .hero-text {
-      z-index: 2;
-    }
-
-    /* TÍTULO GRANDE (PORTAFOLIO) */
     .title-large {
       font-family: var(--font-title);
-      font-size: clamp(4.5rem, 11vw, 10rem);
-      line-height: 0.85;
+      font-size: clamp(3.2rem, 8vw, 7.5rem);
+      line-height: 0.9;
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: -0.02em;
-      margin-left: -0.05em; /* Ajuste para alinear borde con el margen */
+      margin-left: -0.04em;
     }
 
-    /* DESCRIPCIÓN Y BIO */
-    .bio-text {
-      margin-top: 3.5rem;
-      max-width: 380px;
+    /* ========== SOBRE MÍ ========== */
+    .sobre-mi { margin-top: 2.5rem; max-width: 420px; }
+
+    .sobre-mi h2 {
+      font-family: var(--font-title);
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .sobre-mi p {
+      color: var(--body-text);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ========== BOTONES DESPLEGABLES ========== */
+    .contenedor-desplegables {
+      margin-top: 2rem;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .boton-desplegable {
+      border: 1.5px solid var(--accent);
+      background: rgba(243, 240, 236, 0.85);
+      transition: background-color 0.25s;
+    }
+
+    .boton-desplegable[open] { background: #fff; }
+
+    .boton-desplegable summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.9rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.25s, color 0.25s;
+    }
+
+    .boton-desplegable summary::-webkit-details-marker { display: none; }
+
+    .boton-desplegable summary::after {
+      content: "+";
+      font-size: 1.4rem;
+      line-height: 1;
+      transition: transform 0.25s;
+    }
+
+    .boton-desplegable[open] summary::after { transform: rotate(45deg); }
+
+    .boton-desplegable summary:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .contenido {
+      padding: 0.2rem 1.2rem 1.2rem;
       color: var(--body-text);
       font-size: 0.95rem;
       line-height: 1.6;
-      font-weight: 400;
+      animation: abrir 0.3s ease;
     }
 
-    /* CONTENEDOR DE LA FOTO */
+    .contenido ul { padding-left: 1.2rem; }
+    .contenido li { margin-top: 0.3rem; }
+
+    @keyframes abrir {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== FOTO ========== */
     .hero-image-container {
-      position: relative;
       width: 100%;
       height: 75vh;
       max-height: 650px;
@@ -111,119 +227,130 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      /* Ajusta el tono ligeramente cálido si lo deseas */
       filter: contrast(1.02) brightness(0.98);
+      box-shadow: 0 18px 40px rgba(60, 30, 20, 0.2);
     }
 
-    /* DISEÑO RESPONSIVO PARA MÓVILES */
+    /* ========== PIE ========== */
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--accent-dark);
+    }
+
+    /* ========== MÓVIL ========== */
     @media (max-width: 900px) {
-      body {
-        padding: 1.5rem;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      .hero-image-container {
-        height: 50vh;
-        order: 2;
-      }
-
-      .hero-text {
-        order: 1;
-      }
-
-      .bio-text {
-        margin-top: 2rem;
-      }
+      body { padding: 1.5rem; }
+      .hero { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-image-container { height: 50vh; order: 2; }
+      .hero-text { order: 1; }
+      nav a { margin-left: 1rem; }
     }
   </style>
 </head>
 <body>
 
+  <!-- HOJAS DE OTOÑO: se generan con JavaScript (al final de la página) -->
+  <div id="hojas" aria-hidden="true"></div>
+
   <!-- ENCABEZADO -->
   <header>
-    <!-- CAMBIA TU NOMBRE O MARCA AQUÍ -->
-    <div class="PYTER">PYTER </div>
-
-    <!-- ENLACES DEL MENÚ -->
-
-
-  </nav>
+    <div class="brand-name">PYTER</div>
+    <nav aria-label="Principal">
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#informacion">Información</a>
+      <a href="#trabajos">Trabajos</a>
+    </nav>
   </header>
 
-  <main>
-    <!-- SOBRE MÍ -->
-    <section class="HOY">
-      <h2>Sobre mí</h2>
-      <p>alguien sencillo
-    
-      </p>
-    </section>
-  
-    <!-- BOTONES DESPLEGABLES -->
-    <section class="contenedor-desplegables">
-      
-      <!-- Botón 1: Información -->
-      <details class="boton-desplegable">
-        <summary>Información</summary>
-        <div class="contenido">
-          <p>soy una persona responsable</p>
-        </div>
-      </details>
-
-      <!-- Botón 2: Trabajos -->
-      <details class="boton-desplegable">
-        <summary>Trabajos</summary>
-        <div class="contenido">
-          <ul>
-            <li>basculas y revueltas </li>
-            <li>tyson de mexico</li>
-            <li>mastertrim </li>
-          </ul>
-        </div>
-      </details>
-
-    </section>
-  </main>
-
-  <!-- SECCIÓN PRINCIPAL -->
+  <!-- CONTENIDO PRINCIPAL -->
   <main class="hero">
-    
-    <!-- COLUMNA IZQUIERDA: TEXTO -->
+
+    <!-- COLUMNA IZQUIERDA -->
     <div class="hero-text">
-      <h1 class="title-corto">
-        CURRICULUM VITAE
-      </h1>
-      
-     
-      <p class="bio-text">
-        
-      </p>
+      <h1 class="title-large">Curriculum<br>Vitae</h1>
+
+      <section class="sobre-mi" id="sobre-mi">
+        <h2>Sobre mí</h2>
+        <p>Alguien sencillo.</p>
+      </section>
+
+      <section class="contenedor-desplegables">
+        <details class="boton-desplegable" id="informacion">
+          <summary>Información</summary>
+          <div class="contenido">
+            <p>Soy una persona responsable.</p>
+          </div>
+        </details>
+
+        <details class="boton-desplegable" id="trabajos">
+          <summary>Trabajos</summary>
+          <div class="contenido">
+            <ul>
+              <li>Básculas y revueltas</li>
+              <li>Tyson de México</li>
+              <li>Mastertrim</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="boton-desplegable" id="experiencias">
+          <summary>Experiencias</summary>
+          <div class="contenido">
+            <p>Aprendo lo que puedo.</p>
+          </div>
+        </details>
+      </section>
     </div>
 
     <!-- COLUMNA DERECHA: FOTO -->
     <div class="hero-image-container">
-      <!-- REMPLAZA 'tu-foto.jpg' POR LA RUTA O LINK DE TU IMAGEN -->
-      <img src="fam10.jpeg" alt="Retrato del creador">
+      <img src="fam10.jpeg" alt="Retrato de Pyter">
     </div>
 
   </main>
 
+  <footer>© Pyter</footer>
+
+  <script>
+    // Hojas de otoño cayendo
+    (function () {
+      var contenedor = document.getElementById('hojas');
+      var colores = ['#e34026', '#c0392b', '#e08a1e', '#d9a521', '#a8501f', '#8c4a1c'];
+
+      // Dos formas: hoja de arce y hoja alargada
+      var formas = [
+        '<svg viewBox="0 0 32 32"><path fill="COLOR" d="M16 1 L19 8 L25 6 L23 13 L30 14 L25 19 L28 24 L21 23 L17 30 L15 30 L11 23 L4 24 L7 19 L2 14 L9 13 L7 6 L13 8 Z"/><path stroke="rgba(0,0,0,.25)" stroke-width="1" fill="none" d="M16 30 L16 8"/></svg>',
+        '<svg viewBox="0 0 32 32"><path fill="COLOR" d="M16 2 C27 10 28 22 16 29 C4 22 5 10 16 2 Z"/><path stroke="rgba(0,0,0,.25)" stroke-width="1" fill="none" d="M16 31 L16 8 M16 20 L10 15 M16 20 L22 15"/></svg>'
+      ];
+
+      var cantidad = window.innerWidth < 700 ? 14 : 26;
+
+      for (var i = 0; i < cantidad; i++) {
+        var hoja = document.createElement('div');
+        hoja.className = 'hoja';
+
+        var tamano = 18 + Math.random() * 24;          // px
+        var duracion = 9 + Math.random() * 10;         // s
+        var retraso = -Math.random() * duracion;       // negativo: ya van cayendo al cargar
+
+        hoja.style.setProperty('--x', (Math.random() * 100) + '%');
+        hoja.style.setProperty('--size', tamano + 'px');
+        hoja.style.setProperty('--dur', duracion + 's');
+        hoja.style.setProperty('--sway', (2.5 + Math.random() * 3) + 's');
+        hoja.style.setProperty('--delay', retraso + 's');
+        hoja.style.setProperty('--y-fija', (Math.random() * 95) + '%');
+
+        var forma = formas[Math.floor(Math.random() * formas.length)];
+        var color = colores[Math.floor(Math.random() * colores.length)];
+        hoja.innerHTML = forma.replace('COLOR', color);
+
+        contenedor.appendChild(hoja);
+      }
+    })();
+  </script>
+
 </body>
-</html>
-
-
-<!-- BOTONES DESPLEGABLES -->
-<section class="contenedor-desplegables"></section>
-!-- Botón 3: Experiencias -->
-      <details class="boton-desplegable">
-        <summary>Información</summary>
-        <div class="contenido">
-          <p> aprendo lo que puedo</p>
-        </div>
-      </details>
-      </body>
 </html>
